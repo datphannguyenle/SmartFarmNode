@@ -39,7 +39,7 @@ const char* temp_topic_1 = "smart-farm/node/sensor/innode/temperature";
 const char* humid_topic_1 = "smart-farm/node/sensor/innode/humidity";
 const char* temp_topic_2 = "smart-farm/node/sensor/outnode/temperature";
 const char* humid_topic_2 = "smart-farm/node/sensor/outnode/humidity";
-const char* current_topic = "smart-farm/node/sensor/current";
+const char* powermonitor_topic = "smart-farm/node/sensor/innode/powermonitor";
 const char* relay1_topic = "smart-farm/node/control/node_1/relay1";
 const char* relay2_topic = "smart-farm/node/control/node_1/relay2";
 
@@ -116,7 +116,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   for (int i = 0; i < length; i++) {
     message += (char)payload[i];
   }
-  
+  Serial.println(message);
   Serial.printf("Message arrived [%s]: %s\n", topic, message.c_str());
 
   // Handle relay control
@@ -190,7 +190,7 @@ void publishCurrentData() {
   char jsonBuffer[400];
   serializeJson(doc, jsonBuffer);
   
-  client.publish(current_topic, jsonBuffer);
+  client.publish(powermonitor_topic, jsonBuffer);
   Serial.printf("Published current data: %s\n", jsonBuffer);
 }
 
