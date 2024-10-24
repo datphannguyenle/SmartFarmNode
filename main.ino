@@ -25,7 +25,7 @@
 #define CHANNEL_3 3
 
 // Wifi credentials
-const char* ssid = "AlphatBits";
+const char* ssid = "abc.mesh";
 const char* password = "secondbrains";
 
 // MQTT Broker settings
@@ -172,22 +172,25 @@ void publishSensorData(const char* topic, float value, const char* sensorType) {
 }
 
 void publishCurrentData() {
-  StaticJsonDocument<400> doc;
-  JsonArray data = doc.createNestedArray("channels");
+  StaticJsonDocument<200> doc;
+  // JsonArray data = doc.createNestedArray("channels");
   
-  for(int channel = 1; channel <= 3; channel++) {
-    JsonObject channelObj = data.createNestedObject();
-    channelObj["channel"] = channel;
-    channelObj["busVoltage"] = ina3221.getBusVoltage_V(channel);
-    channelObj["shuntVoltage"] = ina3221.getShuntVoltage_mV(channel);
-    channelObj["current"] = ina3221.getCurrent_mA(channel);
-  }
+  // for(int channel = 1; channel <= 3; channel++) {
+  //   JsonObject channelObj = data.createNestedObject();
+  //   channelObj["channel"] = channel;
+  //   channelObj["busVoltage"] = ina3221.getBusVoltage_V(channel);
+  //   channelObj["shuntVoltage"] = ina3221.getShuntVoltage_mV(channel);
+  //   channelObj["current"] = ina3221.getCurrent_mA(channel);
+  // }
   
   doc["device"] = DEVICE_NAME;
   doc["time"] = getTime();
-  doc["type"] = "current_sensor";
+  doc["C1_busVoltage"] = ina3221.getBusVoltage_V(1);
+  doc["C1_current"] = ina3221.getCurrent_mA(1);
+  doc["C2_busVoltage"] = ina3221.getBusVoltage_V(2);
+  doc["C2_current"] = ina3221.getCurrent_mA(2);
 
-  char jsonBuffer[400];
+  char jsonBuffer[200];
   serializeJson(doc, jsonBuffer);
   
   client.publish(powermonitor_topic, jsonBuffer);
